@@ -1,0 +1,19 @@
+server: 
+  port: 3000
+
+executor:
+  corePoolSize: 200
+  maxPoolSize: 200
+  queueCapacity: 1800
+
+scheduler:
+  poolSize: 200
+
+cron:
+  expression: 0 0/1 * * * ?
+  
+openstack:
+  username: admin
+  password: datalyse
+  tenant: admin
+  url: http://193.51.236.246/identity 
