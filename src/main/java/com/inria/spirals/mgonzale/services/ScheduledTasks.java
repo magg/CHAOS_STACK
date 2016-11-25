@@ -23,7 +23,7 @@ public class ScheduledTasks {
 	  @Autowired
 	  private OpenStackConnection osc; 
 	  
-    @Scheduled(cron = "${cron.expression}")
+    //@Scheduled(cron = "${cron.expression}")
 	public void reportCurrentTime()   throws IOException {
 		System.out.println("The time is now: " + dateFormat.format(new Date()));
 		osc.test();

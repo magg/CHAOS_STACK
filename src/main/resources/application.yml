@@ -9,11 +9,16 @@ executor:
 scheduler:
   poolSize: 200
 
-cron:
-  expression: 0 0/1 * * * ?
+schedule: 0 0/1 * * * ?
+
+dryRun: true
   
 openstack:
   username: admin
   password: datalyse
-  tenant: admin
-  url: http://193.51.236.246/identity 
+  projectID: 68db99280ac44db0976b0249d02bcb80
+  domainName: Default
+  endpoint: http://193.51.236.246/identity/v3
+ssh:
+  user: ubuntu
+  key: /home/magg/.ssh/cloud.key
