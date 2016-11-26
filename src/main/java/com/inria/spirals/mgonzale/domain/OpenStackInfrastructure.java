@@ -9,8 +9,7 @@ public final class OpenStackInfrastructure extends AbstractDirectorUtilsInfrastr
 
     private final Token token;
 
-    public OpenStackInfrastructure(DirectorUtils directorUtils, Token token) {
-        super(directorUtils);
+    public OpenStackInfrastructure(Token token) {
         this.token = token;
     }
 

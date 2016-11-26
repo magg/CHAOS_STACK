@@ -3,8 +3,7 @@ package com.inria.spirals.mgonzale.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.task.TaskExecutor;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
 
 @Configuration
 public class ExecutorConfig {
@@ -19,8 +18,8 @@ public class ExecutorConfig {
     private int QUEUE_CAPACITY;
 
     @Bean
-    public TaskExecutor taskExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+    public ThreadPoolExecutorFactoryBean executor() {
+    	ThreadPoolExecutorFactoryBean executor = new ThreadPoolExecutorFactoryBean();
         executor.setCorePoolSize(CORE_POOL_SIZE);
         executor.setMaxPoolSize(MAX_POOL_SIZE);
         executor.setQueueCapacity(QUEUE_CAPACITY);

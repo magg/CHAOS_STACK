@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 	<include resource="org/springframework/boot/logging/logback/base.xml"/>
+	
+	  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[CHAOS STACK] %-5level %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="com.inria.spirals.mgonzale" level="${LOGGING_LEVEL:-INFO}"/>
+    <logger name="org.apache" level="ERROR"/>
+    <logger name="org.cloudfoundry.reconfiguration" level="INFO"/>
+    <logger name="org.springframework.boot.actuate.endpoint.mvc.EndpointHandlerMapping" level="INFO"/>
+    <logger name="org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration" level="INFO"/>
+    <logger name="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping" level="INFO"/>
+    <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="INFO"/>
+    <logger name="org.springframework.boot.autoconfigure.security" level="INFO"/>
+
+    <root level="WARN">
+        <appender-ref ref="STDOUT"/>
+    </root>
+	
 
 </configuration>

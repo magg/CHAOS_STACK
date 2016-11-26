@@ -5,6 +5,7 @@ import java.security.PublicKey;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import org.openstack4j.api.OSClient.OSClientV3;
 import org.openstack4j.api.OSClient.OSClientV3;
@@ -77,7 +78,7 @@ public class OpenStackConnection {
 					});
 
 				   
-				   System.out.println(s.getAddresses().getAddresses().values().toArray() );
+				   //System.out.println(s.getAddresses().getAddresses().values().toArray() );
 				   
 			   }
 
@@ -95,6 +96,15 @@ public class OpenStackConnection {
 	        }
 	        
 	    }
+	   
+	   public List<Server> findAllServers(){
+		    connect();
+			OSClientV3 osc = OSFactory.clientFromToken(this.accessToken);
+
+		   List<? extends Server> servers = osc.compute().servers().list();
+		   
+		   return servers.stream().collect(Collectors.toList());
+	   }
 	   
 	    public String findSecurityGroup(final String instanceId,
 	            final String groupName) {

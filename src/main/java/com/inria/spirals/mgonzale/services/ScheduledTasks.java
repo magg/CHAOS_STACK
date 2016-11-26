@@ -16,14 +16,14 @@ public class ScheduledTasks {
 	
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
-	@Autowired
-	@Qualifier(value = "taskExecutor")
-	private TaskExecutor taskExecutor;
+	//@Autowired
+	//@Qualifier(value = "taskExecutor")
+	//private TaskExecutor taskExecutor;
 	
 	  @Autowired
 	  private OpenStackConnection osc; 
 	  
-    //@Scheduled(cron = "${cron.expression}")
+    //@Scheduled(cron = "${cron.schedule}")
 	public void reportCurrentTime()   throws IOException {
 		System.out.println("The time is now: " + dateFormat.format(new Date()));
 		osc.test();

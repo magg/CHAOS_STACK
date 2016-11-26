@@ -9,16 +9,26 @@ executor:
 scheduler:
   poolSize: 200
 
-schedule: 0 0/1 * * * ?
+cron:
+  schedule: 0 0/2 * * * ?
 
-dryRun: true
+dryRun: false
+
+default:
+  probability: 0.9
   
 openstack:
   username: admin
   password: datalyse
-  projectID: 68db99280ac44db0976b0249d02bcb80
+  projectID: b646566024fe4fde81e9b48cb6377ab0
   domainName: Default
   endpoint: http://193.51.236.246/identity/v3
 ssh:
   user: ubuntu
   key: /home/magg/.ssh/cloud.key
+  
+redis:
+  hostname: localhost
+  port: 6379
+  password: foobared
+  

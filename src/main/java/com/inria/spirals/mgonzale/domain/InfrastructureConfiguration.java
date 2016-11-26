@@ -1,13 +1,9 @@
-package com.inria.spirals.mgonzale.config;
-
-import com.inria.spirals.mgonzale.domain.DirectorUtils;
-import com.inria.spirals.mgonzale.domain.OpenStackInfrastructure;
+package com.inria.spirals.mgonzale.domain;
 
 import org.openstack4j.api.OSClient.OSClientV3;
 import org.openstack4j.model.common.Identifier;
 import org.openstack4j.model.identity.v3.Token;
 import org.openstack4j.openstack.OSFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -17,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 class InfrastructureConfiguration {
 
-    @Autowired
     DirectorUtils directorUtils;
 /*
     @Bean
@@ -51,7 +46,7 @@ class InfrastructureConfiguration {
     @Bean
     @ConditionalOnProperty("openstack.endpoint")
     Token novaApi(@Value("${openstack.endpoint}") String endpoint,
-                    @Value("${openstack.domainName}") String projectID,
+                    @Value("${openstack.projectID}") String projectID,
                     @Value("${openstack.domainName}") String domainName,
                     @Value("${openstack.username}") String username,
                     @Value("${openstack.password}") String password) {
@@ -80,8 +75,8 @@ class InfrastructureConfiguration {
 
     @Bean
     @ConditionalOnBean(Token.class)
-    OpenStackInfrastructure openStackInfrastructure(DirectorUtils directorUtils, Token token) {
-        return new OpenStackInfrastructure(directorUtils, token);
+    OpenStackInfrastructure openStackInfrastructure(Token token) {
+        return new OpenStackInfrastructure(token);
     }
 /*
     @Bean

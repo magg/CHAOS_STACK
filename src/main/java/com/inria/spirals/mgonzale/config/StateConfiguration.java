@@ -17,10 +17,10 @@ import redis.clients.jedis.Protocol;
 public class StateConfiguration {
 
     @Bean
-    @ConditionalOnProperty("vcap.services.chaos-lemur-persistence.credentials.hostname")
-    JedisPool jedisPool(@Value("${vcap.services.chaos-lemur-persistence.credentials.hostname}") String hostname,
-                        @Value("${vcap.services.chaos-lemur-persistence.credentials.port}") Integer port,
-                        @Value("${vcap.services.chaos-lemur-persistence.credentials.password}") String password) {
+    @ConditionalOnProperty("redis.hostname")
+    JedisPool jedisPool(@Value("${redis.hostname}") String hostname,
+                        @Value("${redis.port}") Integer port,
+                        @Value("${redis.password}") String password) {
         return new JedisPool(new JedisPoolConfig(), hostname, port, Protocol.DEFAULT_TIMEOUT, password);
     }
 

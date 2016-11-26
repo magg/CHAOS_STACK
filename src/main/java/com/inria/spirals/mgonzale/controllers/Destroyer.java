@@ -61,7 +61,7 @@ final class Destroyer {
               Infrastructure infrastructure,
              // Reporter reporter,
               StateProvider stateProvider,
-              @Value("${schedule:0 0 * * * *}") String schedule,
+              @Value("${cron.schedule:0 0 * * * *}") String schedule,
               TaskRepository taskRepository,
               TaskUriBuilder taskUriBuilder) {
         this.logger.info("Destruction schedule: {}", schedule);
@@ -80,7 +80,7 @@ final class Destroyer {
      * Trigger method for destruction of members. This method is invoked on a schedule defined by the cron statement stored in the {@code schedule} configuration property.  By default this schedule is
      * {@code 0 0 * * * *}.
      */
-    @Scheduled(cron = "${schedule:0 0 * * * *}")
+    @Scheduled(cron = "${cron.schedule:0 0 * * * *}")
     public void destroy() {
         if (State.STOPPED == this.stateProvider.get()) {
             this.logger.info("Chaos Lemur stopped");
@@ -117,6 +117,8 @@ final class Destroyer {
 
         this.logger.info("{} Beginning run...", identifier);
 
+        //System.out.println(this.infrastructure.getMembers().toString());
+        
         this.infrastructure.getMembers().stream()
             .map(member -> this.executorService.submit(() -> {
                 if (this.fateEngine.shouldDie(member)) {
