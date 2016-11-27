@@ -1,4 +1,4 @@
-package com.inria.spirals.mgonzale.domain;
+package com.inria.spirals.mgonzale.task;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

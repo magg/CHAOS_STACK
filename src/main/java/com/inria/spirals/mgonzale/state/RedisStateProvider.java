@@ -1,11 +1,8 @@
-package com.inria.spirals.mgonzale.config;
+package com.inria.spirals.mgonzale.state;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import com.inria.spirals.mgonzale.controllers.AbstractRestControllerStateProvider;
-import com.inria.spirals.mgonzale.domain.State;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -73,7 +70,8 @@ final class RedisStateProvider extends AbstractRestControllerStateProvider {
         private void returnBrokenResourceQuietly(Jedis jedis) {
             if (jedis != null) {
                 try {
-                    this.jedisPool.returnBrokenResource(jedis);
+                    //this.jedisPool.returnBrokenResource(jedis);
+                	jedis.close();
                 } catch (RuntimeException e) {
                     this.logger.warn("Failed to return broken Jedis resource", e);
                 }
@@ -83,7 +81,8 @@ final class RedisStateProvider extends AbstractRestControllerStateProvider {
         private void returnResourceQuietly(Jedis jedis) {
             if (jedis != null) {
                 try {
-                    this.jedisPool.returnResource(jedis);
+                    //this.jedisPool.returnResource(jedis);
+                    jedis.close();
                 } catch (RuntimeException e) {
                     this.logger.warn("Failed to return Jedis resource", e);
                 }

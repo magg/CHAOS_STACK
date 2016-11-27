@@ -1,7 +1,4 @@
-package com.inria.spirals.mgonzale.repositories;
-
-import com.inria.spirals.mgonzale.domain.Task;
-import com.inria.spirals.mgonzale.domain.Trigger;
+package com.inria.spirals.mgonzale.task;
 
 public interface TaskRepository {
 

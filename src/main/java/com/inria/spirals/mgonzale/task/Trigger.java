@@ -1,4 +1,4 @@
-package com.inria.spirals.mgonzale.domain;
+package com.inria.spirals.mgonzale.task;
 
 public enum Trigger {
 

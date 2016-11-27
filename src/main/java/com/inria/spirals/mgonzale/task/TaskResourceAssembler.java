@@ -1,20 +1,16 @@
-package com.inria.spirals.mgonzale.components;
+package com.inria.spirals.mgonzale.task;
 
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceAssembler;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.stereotype.Component;
 
-import com.inria.spirals.mgonzale.controllers.TaskManager;
-import com.inria.spirals.mgonzale.domain.Task;
-import com.inria.spirals.mgonzale.domain.TaskUriBuilder;
-
 import java.net.URI;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 @Component
-public final class TaskResourceAssembler implements ResourceAssembler<Task, Resource<Task>>, TaskUriBuilder {
+final class TaskResourceAssembler implements ResourceAssembler<Task, Resource<Task>>, TaskUriBuilder {
 
     @Override
     public URI getUri(Task task) {

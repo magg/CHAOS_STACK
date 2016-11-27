@@ -1,4 +1,4 @@
-package com.inria.spirals.mgonzale.controllers;
+package com.inria.spirals.mgonzale.task;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
@@ -10,12 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.inria.spirals.mgonzale.components.TaskResourceAssembler;
-import com.inria.spirals.mgonzale.domain.Task;
-import com.inria.spirals.mgonzale.domain.Trigger;
-
-import com.inria.spirals.mgonzale.repositories.TaskRepository;
-
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,7 +18,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/task")
-public final class TaskManager implements TaskRepository {
+final class TaskManager implements TaskRepository {
 
     private final AtomicLong counter = new AtomicLong();
 

@@ -1,7 +1,4 @@
-package com.inria.spirals.mgonzale.config;
-
-import com.inria.spirals.mgonzale.controllers.AbstractRestControllerStateProvider;
-import com.inria.spirals.mgonzale.domain.State;
+package com.inria.spirals.mgonzale.state;
 
 final class SimpleStateProvider extends AbstractRestControllerStateProvider {
 

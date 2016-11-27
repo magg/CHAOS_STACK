@@ -1,4 +1,4 @@
-package com.inria.spirals.mgonzale.controllers;
+package com.inria.spirals.mgonzale.state;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -8,14 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.inria.spirals.mgonzale.domain.State;
-import com.inria.spirals.mgonzale.domain.StateProvider;
-
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-public abstract class AbstractRestControllerStateProvider implements StateProvider {
+abstract class AbstractRestControllerStateProvider implements StateProvider {
 
     private static final String STATUS_KEY = "status";
 

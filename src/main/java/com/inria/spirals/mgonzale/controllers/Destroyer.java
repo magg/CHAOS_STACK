@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.inria.spirals.mgonzale.domain.DestructionException;
 import com.inria.spirals.mgonzale.domain.Infrastructure;
 import com.inria.spirals.mgonzale.domain.Member;
-import com.inria.spirals.mgonzale.domain.State;
-import com.inria.spirals.mgonzale.domain.StateProvider;
-import com.inria.spirals.mgonzale.domain.Task;
-import com.inria.spirals.mgonzale.domain.TaskUriBuilder;
-import com.inria.spirals.mgonzale.domain.Trigger;
-import com.inria.spirals.mgonzale.repositories.TaskRepository;
+import com.inria.spirals.mgonzale.state.State;
+import com.inria.spirals.mgonzale.state.StateProvider;
+import com.inria.spirals.mgonzale.task.Task;
+import com.inria.spirals.mgonzale.task.TaskRepository;
+import com.inria.spirals.mgonzale.task.TaskUriBuilder;
+import com.inria.spirals.mgonzale.task.Trigger;
 import com.inria.spirals.mgonzale.components.FateEngine;
 
 

@@ -1,4 +1,4 @@
-package com.inria.spirals.mgonzale.domain;
+package com.inria.spirals.mgonzale.state;
 
 public interface StateProvider {
 

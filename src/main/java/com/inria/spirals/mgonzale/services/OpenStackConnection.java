@@ -2,12 +2,12 @@ package com.inria.spirals.mgonzale.services;
 
 import java.io.IOException;
 import java.security.PublicKey;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import org.openstack4j.api.OSClient.OSClientV3;
 import org.openstack4j.api.OSClient.OSClientV3;
 import org.openstack4j.openstack.OSFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +24,6 @@ import org.openstack4j.model.common.Identifier;
 import org.openstack4j.model.compute.Action;
 import org.openstack4j.model.compute.SecGroupExtension;
 import org.openstack4j.model.compute.Server;
-import org.openstack4j.model.identity.v2.Access;
 import org.openstack4j.model.identity.v3.Token;
 
 
@@ -53,18 +52,18 @@ public class OpenStackConnection {
 	   private String sshKey; 
 
 	
-	   private Token getAccessToken ()
+	   public Token getAccessToken ()
 	   {
-	      if (null == accessToken)
+	      if (null == accessToken || accessToken.getExpires().before(new Date()))
 	      {
 	         login ();
 	      }
-
+	      
 	      return accessToken;
 	   }
 	   
 	   public void test(){
-		   connect();
+		   getAccessToken();
 		   if (this.accessToken != null ){
 			   OSClientV3 osc = OSFactory.clientFromToken(this.accessToken);
 			   
@@ -89,7 +88,7 @@ public class OpenStackConnection {
 	   
 	   
 	   public void terminateInstance(final String instanceId) {
-		    connect();
+		    getAccessToken();
 	        if (this.accessToken != null ){
 				   OSClientV3 osc = OSFactory.clientFromToken(this.accessToken);
 				   osc.compute().servers().action(instanceId, Action.STOP);    
@@ -98,7 +97,7 @@ public class OpenStackConnection {
 	    }
 	   
 	   public List<Server> findAllServers(){
-		    connect();
+		    getAccessToken();
 			OSClientV3 osc = OSFactory.clientFromToken(this.accessToken);
 
 		   List<? extends Server> servers = osc.compute().servers().list();
@@ -109,7 +108,7 @@ public class OpenStackConnection {
 	    public String findSecurityGroup(final String instanceId,
 	            final String groupName) {
 	        String id = null;
-	        connect();
+	        getAccessToken();
 			OSClientV3 osc = OSFactory.clientFromToken(this.accessToken);
 
 	        List<? extends SecGroupExtension> security_groups = osc.compute().securityGroups().list();
@@ -132,7 +131,7 @@ public class OpenStackConnection {
 	   
 	   public String  createSecurityGroup(final String instanceId,
 	            final String groupName, final String description) {
-		   connect();
+		   getAccessToken();
 		   OSClientV3 osc = OSFactory.clientFromToken(this.accessToken);
 		   SecGroupExtension group = osc.compute().securityGroups().create(groupName, description);
 		   
@@ -151,37 +150,28 @@ public class OpenStackConnection {
 	   
 	   private void login (){
 		   try {
-			   OSClientV3 osc = OSFactory.builderV3()
-                       .endpoint(apiUrl)
-                       .credentials(username, password, Identifier.byName(domainName))
-                       .scopeToProject(Identifier.byId(projectID))
-                       .authenticate();
-		 
-		   this.accessToken = osc.getToken();
-		   		   
+			   this.accessToken = connect();   
 		   }  catch (Exception crs) {
-	         
 	           System.out.println(crs.getMessage());
+	           this.accessToken = connect();
 	        }
-
 	   }
 	   
-	   public void connect(){
+	   private Token connect(){
 		   
-		   try{
-			   
-			   login();
-		   } catch (Exception crs) {
-	         
-			   login();
-	        }
+		   OSClientV3 osc = OSFactory.builderV3()
+                   .endpoint(apiUrl)
+                   .credentials(username, password, Identifier.byName(domainName))
+                   .scopeToProject(Identifier.byId(projectID))
+                   .authenticate();
+		   
+		   return osc.getToken();
 		   
 	   }
 	   
 	   
 	   public String connectSSH (final String instanceId){
-		   
-		   String result = "ERROR - couldn't connect";
+		   String result = null;
 	       int exitStat;
 		   OSClientV3 osc = OSFactory.clientFromToken(this.accessToken);
 	       Map<String, String> md = osc.compute().servers().getMetadata(instanceId);

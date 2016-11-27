@@ -1,4 +1,4 @@
-package com.inria.spirals.mgonzale.domain;
+package com.inria.spirals.mgonzale.task;
 
 /**
  * Valid states for a {@code Task} <ul> <li>{@link #COMPLETE}</li> <li>{@link #IN_PROGRESS}</li> </ul>
