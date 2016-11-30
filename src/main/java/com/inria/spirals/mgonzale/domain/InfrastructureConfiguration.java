@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 class InfrastructureConfiguration {
 
-    DirectorUtils directorUtils;
 /*
     @Bean
     @ConditionalOnProperty("aws.accessKeyId")
@@ -65,7 +64,13 @@ class InfrastructureConfiguration {
 			   
 		   }  catch (Exception crs) {
 	         
-	           System.out.println(crs.getMessage());
+			   OSClientV3 osc = OSFactory.builderV3()
+	                    .endpoint(endpoint)
+	                    .credentials(username, password, Identifier.byName(domainName))
+	                    .scopeToProject(Identifier.byId(projectID))
+	                    .authenticate();
+			 
+				   token = osc.getToken();
 	        }
 
     	

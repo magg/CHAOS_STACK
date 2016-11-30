@@ -101,52 +101,12 @@ public class OpenStackConnection {
 			OSClientV3 osc = OSFactory.clientFromToken(this.accessToken);
 
 		   List<? extends Server> servers = osc.compute().servers().list();
-		   
+		   		   
 		   return servers.stream().collect(Collectors.toList());
 	   }
 	   
-	    public String findSecurityGroup(final String instanceId,
-	            final String groupName) {
-	        String id = null;
-	        getAccessToken();
-			OSClientV3 osc = OSFactory.clientFromToken(this.accessToken);
+	   
 
-	        List<? extends SecGroupExtension> security_groups = osc.compute().securityGroups().list();
-	        for (SecGroupExtension group: security_groups){
-	            if (group.getName() == groupName) {
-	                id = group.getId();
-	                break;
-	            }
-	        }
-	        return id;
-	    }
-	   
-	   public void removeSecurityGroupFromInstnce (final String instanceId){
-		   OSClientV3 osc = OSFactory.clientFromToken(this.accessToken);
-		   List<? extends SecGroupExtension> security_groups = osc.compute().securityGroups().listServerGroups(instanceId);
-		   for (SecGroupExtension group: security_groups){
-			   osc.compute().servers().removeSecurityGroup(instanceId,  group.getName());
-		   }
-	   }
-	   
-	   public String  createSecurityGroup(final String instanceId,
-	            final String groupName, final String description) {
-		   getAccessToken();
-		   OSClientV3 osc = OSFactory.clientFromToken(this.accessToken);
-		   SecGroupExtension group = osc.compute().securityGroups().create(groupName, description);
-		   
-		   
-		   return group.getId();
-		   
-	   }
-	   
-	   public void addSecurityGroupToInstance(final String instanceId,
-       final String groupId){
-		   OSClientV3 osc = OSFactory.clientFromToken(this.accessToken);
-		   SecGroupExtension group = osc.compute().securityGroups().get(groupId);
-		   osc.compute().servers().addSecurityGroup(instanceId,  group.getName());
-		   
-	   }
 	   
 	   private void login (){
 		   try {

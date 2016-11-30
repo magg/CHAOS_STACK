@@ -71,5 +71,10 @@ public final class Task {
     public void stop() {
         this.status = TaskStatus.COMPLETE;
     }
+    
+    public void error(){
+    	this.status = TaskStatus.ERROR;
+    	
+    }
 
 }

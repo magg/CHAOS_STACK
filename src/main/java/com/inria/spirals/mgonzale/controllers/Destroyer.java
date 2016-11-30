@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.inria.spirals.mgonzale.domain.DestructionException;
 import com.inria.spirals.mgonzale.domain.Infrastructure;
 import com.inria.spirals.mgonzale.domain.Member;
+import com.inria.spirals.mgonzale.reporter.Event;
+import com.inria.spirals.mgonzale.reporter.Reporter;
 import com.inria.spirals.mgonzale.state.State;
 import com.inria.spirals.mgonzale.state.StateProvider;
 import com.inria.spirals.mgonzale.task.Task;
@@ -46,7 +48,7 @@ final class Destroyer {
 
     private final Infrastructure infrastructure;
 
-   // private final Reporter reporter;
+    private final Reporter reporter;
 
     private final StateProvider stateProvider;
 
@@ -59,7 +61,7 @@ final class Destroyer {
               ExecutorService executorService,
               FateEngine fateEngine,
               Infrastructure infrastructure,
-             // Reporter reporter,
+              Reporter reporter,
               StateProvider stateProvider,
               @Value("${cron.schedule:0 0 * * * *}") String schedule,
               TaskRepository taskRepository,
@@ -70,7 +72,7 @@ final class Destroyer {
         this.executorService = executorService;
         this.fateEngine = fateEngine;
         this.infrastructure = infrastructure;
-        //this.reporter = reporter;
+        this.reporter = reporter;
         this.stateProvider = stateProvider;
         this.taskRepository = taskRepository;
         this.taskUriBuilder = taskUriBuilder;
@@ -119,7 +121,9 @@ final class Destroyer {
 
         //System.out.println(this.infrastructure.getMembers().toString());
         
-        this.infrastructure.getMembers().stream()
+        
+        try {
+            this.infrastructure.getMembers().stream()
             .map(member -> this.executorService.submit(() -> {
                 if (this.fateEngine.shouldDie(member)) {
                     try {
@@ -128,7 +132,7 @@ final class Destroyer {
                         if (this.dryRun) {
                             this.logger.info("{} Destroyed (Dry Run): {}", identifier, member);
                         } else {
-                            this.infrastructure.destroy(member);
+                            this.infrastructure.terminateInstance(member.getId());
                             this.logger.info("{} Destroyed: {}", identifier, member);
                         }
 
@@ -146,9 +150,20 @@ final class Destroyer {
                 }
             });
 
-        //this.reporter.sendEvent(new Event(identifier, destroyedMembers));
+        this.reporter.sendEvent(new Event(identifier, destroyedMembers));
 
         task.stop();
+        	
+        	
+        	
+        } catch (Exception e ) {
+        	
+            this.logger.error("{} Run has an error...", identifier, e);
+            task.error();
+        	
+        }
+        
+
     }
 
 }

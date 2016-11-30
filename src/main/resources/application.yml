@@ -12,17 +12,17 @@ scheduler:
 cron:
   schedule: 0 0/2 * * * ?
 
-dryRun: false
+dryRun: true
 
 default:
-  probability: 0.9
+  probability: 0.3
   
 openstack:
   username: admin
   password: datalyse
-  projectID: b646566024fe4fde81e9b48cb6377ab0
+  projectID: ecd02933c4244991b83e5a86c0279645
   domainName: Default
-  endpoint: http://193.51.236.246/identity/v3
+  endpoint: http://193.51.236.63/identity/v3
 ssh:
   user: ubuntu
   key: /home/magg/.ssh/cloud.key
@@ -31,4 +31,8 @@ redis:
   hostname: localhost
   port: 6379
   password: foobared
+  
+spring:
+  main:
+    banner-mode: off
   

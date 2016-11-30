@@ -13,6 +13,9 @@ public enum TaskStatus {
     /**
      * The {@code Task} is in progress
      */
-    IN_PROGRESS
+    IN_PROGRESS,
+    
+    
+    ERROR
 
 }

@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.inria.spirals.mgonzale.services.OpenStackConnection;
 
-abstract class AbstractDirectorUtilsInfrastructure implements Infrastructure {
+abstract class InfrastructureCrawler implements Infrastructure {
 
 	@Autowired
 	private OpenStackConnection os;
@@ -18,11 +18,13 @@ abstract class AbstractDirectorUtilsInfrastructure implements Infrastructure {
     public final Set<Member> getMembers() {
         Set<Member> members = new HashSet<>();
         
+        os.findAllServers().forEach(System.out::println);
+        
         os.findAllServers().forEach(
         		
         		virtualMachine -> {
                     String id = virtualMachine.getId();
-                    String job = virtualMachine.getImageId();
+                    String job = virtualMachine.getHypervisorHostname();
                     String name = virtualMachine.getInstanceName();
                     
                     members.add(new Member(id, virtualMachine.getAvailabilityZone(), job, name));
