@@ -2,8 +2,6 @@ package com.inria.spirals.mgonzale.domain;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,8 +15,6 @@ abstract class InfrastructureCrawler implements Infrastructure {
     @Override
     public final Set<Member> getMembers() {
         Set<Member> members = new HashSet<>();
-        
-        os.findAllServers().forEach(System.out::println);
         
         os.findAllServers().forEach(
         		

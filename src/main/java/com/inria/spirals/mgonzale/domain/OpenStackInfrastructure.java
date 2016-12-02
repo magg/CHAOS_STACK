@@ -1,23 +1,12 @@
 package com.inria.spirals.mgonzale.domain;
 
-import java.io.IOException;
-import java.security.PublicKey;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import org.openstack4j.api.OSClient.OSClientV3;
 import org.openstack4j.model.compute.Action;
 import org.openstack4j.model.compute.SecGroupExtension;
 import org.openstack4j.model.identity.v3.Token;
 import org.openstack4j.openstack.OSFactory;
-
-import net.schmizz.sshj.SSHClient;
-import net.schmizz.sshj.connection.ConnectionException;
-import net.schmizz.sshj.connection.channel.direct.Session;
-import net.schmizz.sshj.connection.channel.direct.Session.Command;
-import net.schmizz.sshj.transport.TransportException;
-import net.schmizz.sshj.transport.verification.HostKeyVerifier;
 
 public final class OpenStackInfrastructure extends InfrastructureCrawler {
 

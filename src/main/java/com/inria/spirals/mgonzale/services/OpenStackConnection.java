@@ -21,8 +21,6 @@ import net.schmizz.sshj.transport.TransportException;
 import net.schmizz.sshj.transport.verification.HostKeyVerifier;
 
 import org.openstack4j.model.common.Identifier;
-import org.openstack4j.model.compute.Action;
-import org.openstack4j.model.compute.SecGroupExtension;
 import org.openstack4j.model.compute.Server;
 import org.openstack4j.model.identity.v3.Token;
 
@@ -87,26 +85,21 @@ public class OpenStackConnection {
 	   }
 	   
 	   
-	   public void terminateInstance(final String instanceId) {
-		    getAccessToken();
-	        if (this.accessToken != null ){
-				   OSClientV3 osc = OSFactory.clientFromToken(this.accessToken);
-				   osc.compute().servers().action(instanceId, Action.STOP);    
-	        }
-	        
-	    }
 	   
 	   public List<Server> findAllServers(){
 		    getAccessToken();
 			OSClientV3 osc = OSFactory.clientFromToken(this.accessToken);
 
 		   List<? extends Server> servers = osc.compute().servers().list();
-		   		   
-		   return servers.stream().collect(Collectors.toList());
+		    
+		   return servers.stream()
+			.parallel()
+			.filter(p -> p.getStatus() == Server.Status.ACTIVE )
+			.sequential()
+			.collect(Collectors.toList());
+
 	   }
 	   
-	   
-
 	   
 	   private void login (){
 		   try {

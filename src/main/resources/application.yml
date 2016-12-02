@@ -10,12 +10,12 @@ scheduler:
   poolSize: 200
 
 cron:
-  schedule: 0 0/2 * * * ?
+  schedule: 0 0/10 * * * ?
 
-dryRun: true
+dryRun: false
 
 default:
-  probability: 0.3
+  probability: 0.2
   
 openstack:
   username: admin
