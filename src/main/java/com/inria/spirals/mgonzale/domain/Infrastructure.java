@@ -17,15 +17,20 @@ public interface Infrastructure {
      * @throws DestructionException
      */
     void terminateInstance(String instanceId) throws DestructionException;
-
+    
+    
     /**
-     * Returns a {@link Set} of all {@link Member}s
+     * Finds a security group with the given name, that can be applied to the given instance.
      *
-     * @return a {@link Set} of all {@link Member}s
+     * For example, if it is a VPC instance, it makes sure that it is in the same VPC group.
+     *
+     * @param instanceId
+     *            the instance that the group must be applied to
+     * @param groupName
+     *            the name of the group to find
+     *
+     * @return The group id, or null if not found
      */
-    Set<Member> getMembers();
-    
-    
     String findSecurityGroup(String instanceId, String groupName);
 
     /**

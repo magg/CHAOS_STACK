@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.inria.spirals.mgonzale.domain.DestructionException;
-import com.inria.spirals.mgonzale.domain.Infrastructure;
+import com.inria.spirals.mgonzale.domain.InfrastructureCrawler;
 import com.inria.spirals.mgonzale.domain.Member;
 import com.inria.spirals.mgonzale.reporter.Event;
 import com.inria.spirals.mgonzale.reporter.Reporter;
@@ -30,6 +30,7 @@ import com.inria.spirals.mgonzale.components.FateEngine;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
@@ -46,7 +47,7 @@ final class Destroyer {
 
     private final FateEngine fateEngine;
 
-    private final Infrastructure infrastructure;
+    private final InfrastructureCrawler infrastructure;
 
     private final Reporter reporter;
 
@@ -60,7 +61,7 @@ final class Destroyer {
     Destroyer(@Value("${dryRun:false}") Boolean dryRun,
               ExecutorService executorService,
               FateEngine fateEngine,
-              Infrastructure infrastructure,
+              InfrastructureCrawler infrastructure,
               Reporter reporter,
               StateProvider stateProvider,
               @Value("${cron.schedule:0 0 * * * *}") String schedule,
@@ -132,10 +133,10 @@ final class Destroyer {
                         if (this.dryRun) {
                             this.logger.info("{} Destroyed (Dry Run): {}", identifier, member);
                         } else {
-                            this.infrastructure.terminateInstance(member.getId());
+                            this.infrastructure.destroy(member);
+
                             this.logger.info("{} Destroyed: {}", identifier, member);
                         }
-
                         destroyedMembers.add(member);
                     } catch (DestructionException e) {
                         this.logger.warn("{} Destroy failed: {}", identifier, member, e);

@@ -14,7 +14,8 @@ public final class Member implements Comparable<Member> {
     private final String job;
 
     private final String name;
-
+    
+    private final Infrastructure infrastructure;
     /**
      * Creates an instance
      *
@@ -23,7 +24,7 @@ public final class Member implements Comparable<Member> {
      * @param job        the job the {@link Member} belongs to
      * @param name       the name of the {@link Member}
      */
-    public Member(String id, String deployment, String job, String name) {
+    public Member(String id, String deployment, String job, String name, Infrastructure infrastructure) {
         Assert.hasText(id, "id must have text");
         Assert.hasText(deployment, "deployment must have text");
         Assert.hasText(job, "job must have text");
@@ -33,6 +34,7 @@ public final class Member implements Comparable<Member> {
         this.deployment = deployment;
         this.job = job;
         this.name = name;
+        this.infrastructure = infrastructure;
     }
 
     @Override
@@ -95,6 +97,10 @@ public final class Member implements Comparable<Member> {
     public String toString() {
         return String.format("[id: %s, deployment: %s, job: %s, name: %s]", this.id, this.deployment, this.job, this.name);
     }
+
+	public Infrastructure getInfrastructure() {
+		return infrastructure;
+	}
 
 }
 

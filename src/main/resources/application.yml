@@ -10,12 +10,12 @@ scheduler:
   poolSize: 200
 
 cron:
-  schedule: 0 0/10 * * * ?
+  schedule: 0 0/2 * * * ?
 
 dryRun: false
 
 default:
-  probability: 0.2
+  probability: 0.1
   
 openstack:
   username: admin
@@ -35,4 +35,15 @@ redis:
 spring:
   main:
     banner-mode: off
+    
+security:
+  user:
+    name: magg
+    password: 78fa095d-3f4c-48b1-ad50-e24c31d5cf69
+       
+failure:
+ modes:
+   shutdowninstance: true
+   blockallnetworktraffic: false 
+   
   
