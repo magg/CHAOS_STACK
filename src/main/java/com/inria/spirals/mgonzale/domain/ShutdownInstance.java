@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class ShutdownInstance extends FailureMode {
+public class ShutdownInstance {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     

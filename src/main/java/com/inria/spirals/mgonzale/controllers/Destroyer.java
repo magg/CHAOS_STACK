@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.inria.spirals.mgonzale.domain.DestructionException;
-import com.inria.spirals.mgonzale.domain.InfrastructureCrawler;
+import com.inria.spirals.mgonzale.domain.FailureMode;
+import com.inria.spirals.mgonzale.domain.Infrastructure;
 import com.inria.spirals.mgonzale.domain.Member;
 import com.inria.spirals.mgonzale.reporter.Event;
 import com.inria.spirals.mgonzale.reporter.Reporter;
@@ -30,7 +31,6 @@ import com.inria.spirals.mgonzale.components.FateEngine;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
@@ -47,7 +47,7 @@ final class Destroyer {
 
     private final FateEngine fateEngine;
 
-    private final InfrastructureCrawler infrastructure;
+    private final Infrastructure infrastructure;
 
     private final Reporter reporter;
 
@@ -56,17 +56,20 @@ final class Destroyer {
     private final TaskRepository taskRepository;
 
     private final TaskUriBuilder taskUriBuilder;
+    
+    private final FailureMode fm;
 
     @Autowired
     Destroyer(@Value("${dryRun:false}") Boolean dryRun,
               ExecutorService executorService,
               FateEngine fateEngine,
-              InfrastructureCrawler infrastructure,
+              Infrastructure infrastructure,
               Reporter reporter,
               StateProvider stateProvider,
               @Value("${cron.schedule:0 0 * * * *}") String schedule,
               TaskRepository taskRepository,
-              TaskUriBuilder taskUriBuilder) {
+              TaskUriBuilder taskUriBuilder,
+              FailureMode fm) {
         this.logger.info("Destruction schedule: {}", schedule);
 
         this.dryRun = dryRun;
@@ -77,6 +80,7 @@ final class Destroyer {
         this.stateProvider = stateProvider;
         this.taskRepository = taskRepository;
         this.taskUriBuilder = taskUriBuilder;
+        this.fm=fm;
     }
 
     /**
@@ -133,7 +137,7 @@ final class Destroyer {
                         if (this.dryRun) {
                             this.logger.info("{} Destroyed (Dry Run): {}", identifier, member);
                         } else {
-                            this.infrastructure.destroy(member);
+                            this.fm.destroy(member);
 
                             this.logger.info("{} Destroyed: {}", identifier, member);
                         }

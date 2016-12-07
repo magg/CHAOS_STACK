@@ -1,5 +1,8 @@
 package com.inria.spirals.mgonzale.domain;
 
+import java.io.IOException;
+import java.security.PublicKey;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,24 +16,25 @@ import org.openstack4j.model.identity.v3.Token;
 import org.openstack4j.openstack.OSFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
-public final class OpenStackInfrastructure implements Infrastructure, InfrastructureCrawler {
+import net.schmizz.sshj.SSHClient;
+import net.schmizz.sshj.connection.ConnectionException;
+import net.schmizz.sshj.transport.TransportException;
+import net.schmizz.sshj.transport.verification.HostKeyVerifier;
+
+public final class OpenStackInfrastructure implements Infrastructure {
 
     private final Token token;
     
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    
-    @Autowired
-    private FailureMode fm;
-    
-    @Autowired
-    private BlockAllNetworkTraffic block;
-    
-    @Autowired
-    private ShutdownInstance si;
-
-
+    	   
+	private int sshTimeout = 11000;
+	@Value ("${ssh.user}")
+	private String sshUser; 
+	@Value ("${ssh.key}")
+	private String sshKey; 
+   
     public OpenStackInfrastructure(Token token) {
         this.token = token;
     }
@@ -45,7 +49,6 @@ public final class OpenStackInfrastructure implements Infrastructure, Infrastruc
             throw new DestructionException(String.format("Unable to destroy %s", instanceId), e);
         }
     }
-    
     
     public String findSecurityGroup(final String instanceId,
             final String groupName) {
@@ -121,8 +124,8 @@ public final class OpenStackInfrastructure implements Infrastructure, Infrastruc
 	        		
 	        		virtualMachine -> {
 	                    String id = virtualMachine.getId();
-	                    String job = virtualMachine.getHypervisorHostname();
-	                    String name = virtualMachine.getInstanceName();
+	                    String job = virtualMachine.getInstanceName();
+	                    String name = virtualMachine.getName();
 	                    
 	                    members.add(new Member(id, virtualMachine.getAvailabilityZone(), job, name, this));
 	                }
@@ -131,22 +134,74 @@ public final class OpenStackInfrastructure implements Infrastructure, Infrastruc
 
 	        return members;
 	    }
-	    
-	    @Override
-	    public void destroy(Member member) throws DestructionException{
-	    	switch (fm.pickFailureMode()){
-	    	case "shutdowninstance":
-	    			si.terminateNow(member);
-	    		break;
-	    	case "blockallnetworktraffic":
-	    			block.blockAllNetworkTraffic(member);
-	    		break;
-	        default:
-	        	break;
-	    		
-	    	}
-	    	
-	    }
+
+		@Override
+		public SSHClient connectSsh(String instanceId) {
+			   final SSHClient ssh = new SSHClient();
+	           ssh.addHostKeyVerifier(
+	                   new HostKeyVerifier() {
+	                       @Override
+	                       public boolean verify(String s, int i, PublicKey publicKey) {
+	                           return true;
+	                       }
+	                   });
+	           
+	           try {
+	    	       ssh.setConnectTimeout(sshTimeout);
+	    	       ssh.setTimeout(sshTimeout);
+	        	   ssh.connect(getIPv4Addr(instanceId));
+	        	   ssh.authPublickey(sshUser, sshKey);   
+	           } 
+	           
+	           catch (TransportException t ){
+		    	   try {
+						ssh.disconnect();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		       } catch (ConnectionException c) {
+
+		    	   try {
+						ssh.disconnect();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		       } catch (Exception e) {
+
+		    	    try {
+						ssh.disconnect();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+		       }
+	         	
+	           return ssh;
+		}
+		
+		public String getIPv4Addr (final String instanceId) {
+			   OSClientV3 osc = OSFactory.clientFromToken(this.token);
+			
+			   Server s = osc.compute().servers().get(instanceId);
+			   ArrayList<ArrayList<String>> listOLists = new ArrayList<ArrayList<String>>(); 
+			   s.getAddresses().getAddresses().entrySet().stream().forEach( e ->
+			   listOLists.add( e.getValue()
+				   .stream()
+				   .filter(p -> p.getVersion() == 4)
+				   .map(p -> p.getAddr())
+				   .collect(Collectors.toCollection(ArrayList::new)))
+				   
+			   );
+			   
+			   List<String> flat = 
+					   listOLists.stream()
+					        .flatMap(List::stream)
+					        .collect(Collectors.toList());
+			   
+			   return flat.get(0);
+		}
 		   
     
 }

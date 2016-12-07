@@ -12,13 +12,7 @@ public interface InfrastructureCrawler {
      * @throws DestructionException
      */
     void destroy(Member member) throws DestructionException;
-    
-    /**
-     * Returns a {@link Set} of all {@link Member}s
-     *
-     * @return a {@link Set} of all {@link Member}s
-     */
-    Set<Member> getMembers();
+
 
 
 }

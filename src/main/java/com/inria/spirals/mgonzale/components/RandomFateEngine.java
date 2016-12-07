@@ -48,7 +48,7 @@ final class RandomFateEngine implements FateEngine {
 
     @Override
     public Boolean shouldDie(Member member) {
-        if (!isWhitelisted(member) || isBlacklisted(member)) {
+        if (isWhitelisted(member) || !isBlacklisted(member)) {
             return false;
         }
 
@@ -70,12 +70,18 @@ final class RandomFateEngine implements FateEngine {
     }
 
     private boolean isBlacklisted(Member member) {
-        return Arrays.stream(this.blacklist)
-            .anyMatch(s -> member.getDeployment().equalsIgnoreCase(s) || member.getJob().equalsIgnoreCase(s));
+        return this.blacklist.length == 0 || Arrays.stream(this.blacklist)
+            .anyMatch(s -> 
+            member.getDeployment().toLowerCase().contains(s.toLowerCase())
+    		|| member.getJob().toLowerCase().contains(s.toLowerCase()) 
+    		|| member.getName().toLowerCase().contains(s.toLowerCase())
+            		);
     }
 
     private boolean isWhitelisted(Member member) {
-        return this.whitelist.length == 0 || Arrays.stream(this.whitelist)
-            .anyMatch(s -> member.getDeployment().equalsIgnoreCase(s) || member.getJob().equalsIgnoreCase(s));
+        return Arrays.stream(this.whitelist)
+            .anyMatch(s -> member.getDeployment().toLowerCase().contains(s.toLowerCase())
+            		|| member.getJob().toLowerCase().contains(s.toLowerCase()) 
+            		|| member.getName().toLowerCase().contains(s.toLowerCase()));
     }
 }
